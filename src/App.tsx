@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./App.css";
-
 import Button from "./components/ui/Button/button";
 import Input from "./components/ui/Input/input";
 import Card from "./components/ui/Card/card";
@@ -8,11 +7,9 @@ import Modal from "./components/ui/Modal/modal";
 import DatePicker from "./components/ui/DatePicker/datePicker";
 import Navbar from "./components/Dashboard/Navbar/Navbar";
 import Sidebar from "./components/Dashboard/Sidebar/Siderbar";
-
-
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import StatsCard from "./components/Dashboard/StatsCard/Statscard";
+import ProgressChart from "./components/Dashboard/ProgressChart/ProgressChart";
+
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -42,37 +39,24 @@ function App() {
 
   return (
     <>
-      <Navbar onLogout={handlerLogout} title="Dashboard" userName="" />
-
+      <Navbar onLogout={handlerLogout} title="Dashboard" userName="Josimar" />
       <div className="flex">
         <Sidebar />
 
-        <main className="flex-1 p-6 bg-gray-50 min-h-screen">
-          <h2 className="text-xl font-semibold mb-4">Resumen Financiero</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <StatsCard
-              title="Total Gastado"
-              value="$1,250"
-              icon={<TrendingDownIcon />}
-              change="-5%"
-              changeColor="negative"
-            />
-            <StatsCard
-              title="Ingresos"
-              value="$2,000"
-              icon={<TrendingUpIcon />}
-              change="+10%"
-              changeColor="positive"
-            />
-            <StatsCard
-              title="Balance"
-              value="$750"
-              icon={<TrendingUpIcon />}
-              change="+3%"
-              changeColor="positive"
-            />
+        <div className="flex-1 p-6 space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <StatsCard title="Gastos del mes" value="$1,250" change="+12%" changeColor="positive" />
+            <StatsCard title="Ingresos" value="$2,500" change="-5%" changeColor="negative" />
+            <StatsCard title="Ahorro" value="$500" />
           </div>
+
+          <ProgressChart
+            title="Progreso del presupuesto mensual"
+            progress={10}
+            amount={750}
+            target={1000}
+            color="bg-blue-500"
+          />
 
           <Card title="Gestión de Gastos">
             <Input
@@ -87,26 +71,26 @@ function App() {
             />
             <Button onClick={handleClick}>Guardar Gasto</Button>
           </Card>
-
-          <Modal
-            title="Confirmar Gasto"
-            open={isModalOpen}
-            onClose={handleModalClose}
-            actions={
-              <>
-                <Button onClick={handleSave}>Guardar</Button>
-                <Button onClick={handleModalClose}>Cancelar</Button>
-              </>
-            }
-          >
-            <p>¿Deseas guardar el gasto: "{inputValue}"?</p>
-            <p>
-              Fecha seleccionada:{" "}
-              {selectedDate?.toLocaleDateString() || "No seleccionada"}
-            </p>
-          </Modal>
-        </main>
+        </div>
       </div>
+
+      <Modal
+        title="Confirmar Gasto"
+        open={isModalOpen}
+        onClose={handleModalClose}
+        actions={
+          <>
+            <Button onClick={handleSave}>Guardar</Button>
+            <Button onClick={handleModalClose}>Cancelar</Button>
+          </>
+        }
+      >
+        <p>¿Deseas guardar el gasto: "{inputValue}"?</p>
+        <p>
+          Fecha seleccionada:{" "}
+          {selectedDate?.toLocaleDateString() || "No seleccionada"}
+        </p>
+      </Modal>
     </>
   );
 }
